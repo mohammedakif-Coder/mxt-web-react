@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CommandPalette } from "@/components/CommandPalette";
 import { AppRoutes } from "@/routes/AppRoutes";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const queryClient = new QueryClient();
 
@@ -13,10 +14,12 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <AppRoutes />
-        <CommandPalette />
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppRoutes />
+          <CommandPalette />
+        </BrowserRouter>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

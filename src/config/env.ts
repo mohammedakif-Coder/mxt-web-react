@@ -10,8 +10,7 @@ function numberFromEnv(value: string | undefined, fallback: number) {
 }
 
 export const env: AppEnv = {
-  apiBaseUrl: import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000/api",
+  apiBaseUrl: import.meta.env.VITE_API_BASE_URL ?? "https://smsglobal-api.mobileprogramming.net",
   apiTimeoutMs: numberFromEnv(import.meta.env.VITE_API_TIMEOUT_MS, 15000),
   appName: import.meta.env.VITE_APP_NAME ?? "MXT",
 };
-

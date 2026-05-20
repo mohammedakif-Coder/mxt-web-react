@@ -1,10 +1,11 @@
-import { Settings, HelpCircle, Moon, Sun } from "lucide-react";
+import { Settings, HelpCircle, LogOut, Moon, Sun } from "lucide-react";
 import AIButton from "@/features/ai/components/AIButton";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useProfile } from "@/hooks/use-profile";
+import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/hooks/use-theme";
 interface DashboardHeaderProps {
   onToggleAIPanel: () => void;
@@ -20,16 +21,24 @@ const routeLabels: Record<string, string> = {
 
 const DashboardHeader = ({ onToggleAIPanel, aiPanelOpen }: DashboardHeaderProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { data: profile } = useProfile();
+  const { logout, user } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const currentLabel = routeLabels[location.pathname] || "MXT";
+  const authName = typeof user?.name === "string" ? user.name : typeof user?.username === "string" ? user.username : "";
 
-  const initials = profile?.full_name
+  const initials = (authName || profile?.full_name)
     ?.split(" ")
     .map((n) => n[0])
     .join("")
     .slice(0, 2)
     .toUpperCase() ?? "MX";
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
 
   return (
     <header className="liquid-header h-[56px] flex items-center justify-between px-5 shrink-0 z-20">
@@ -89,6 +98,15 @@ const DashboardHeader = ({ onToggleAIPanel, aiPanelOpen }: DashboardHeaderProps)
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom" className="text-xs">Help</TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="icon" className="liquid-icon-btn h-8 w-8 rounded-full text-muted-foreground/80 hover:text-foreground ios-press" onClick={handleLogout}>
+              <LogOut className="h-[15px] w-[15px]" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="text-xs">Logout</TooltipContent>
         </Tooltip>
 
         {/* Avatar */}
